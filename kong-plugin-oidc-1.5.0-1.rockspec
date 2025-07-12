@@ -1,7 +1,7 @@
 package = "kong-plugin-oidc"
-version = "1.4.0-1"
+version = "1.5.0-1"
 source = {
-    url = "git://github.com/revomatico/kong-oidc",
+    url = "git://github.com/armeldemarsac92/kong-oidc",
     tag = "master",
     dir = "kong-oidc"
 }
@@ -18,11 +18,11 @@ description = {
 
         It can be used as a reverse proxy terminating OAuth/OpenID Connect in front of an origin server so that the origin server/services can be protected with the relevant standards without implementing those on the server itself.
     ]],
-    homepage = "git://github.com/revomatico/kong-oidc",
+    homepage = "git://github.com/armeldemarsac92/kong-oidc",
     license = "Apache 2.0"
 }
 dependencies = {
-    "lua-resty-openidc ~> 1.7.6-3"
+    "lua-resty-openidc ~> 1.8.0-1"
 }
 build = {
     type = "builtin",
