@@ -16,7 +16,7 @@ RUN mkdir -p /usr/local/share/lua/5.1/kong/plugins/oidc \
 
 # === Clone JWT Keycloak plugin ===
 WORKDIR /tmp
-RUN git clone --branch 20200505-access-token-processing https://github.com/BGaunitz/kong-plugin-jwt-keycloak.git
+RUN git clone --branch master https://github.com/armeldemarsac92/kong-plugin-jwt-keycloak.git
 
 # Copier les fichiers Lua et le dossier validators dans l’arborescence attendue
 RUN mkdir -p /usr/local/share/lua/5.1/kong/plugins/jwt-keycloak \
