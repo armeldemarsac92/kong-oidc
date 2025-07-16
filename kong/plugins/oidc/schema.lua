@@ -1,6 +1,6 @@
 local typedefs = require "kong.db.schema.typedefs"
 
-local PLUGIN_NAME = "my-plugin"
+local PLUGIN_NAME = "oidc"
 
 return {
   name = PLUGIN_NAME,
