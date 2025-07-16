@@ -6,7 +6,27 @@ local utils = require("kong.plugins.oidc.utils")
 local filter = require("kong.plugins.oidc.filter")
 local session = require("kong.plugins.oidc.session")
 
-oidc.set_logging(nil, { DEBUG = ngx.DEBUG })
+local kong_log = kong.log
+
+local function kong_oidc_logger(level, ...)
+  local msg = table.concat({...}, " ")
+  if level == ngx.DEBUG then
+    kong_log.debug(msg)
+  elseif level == ngx.ERR then
+    kong_log.err(msg)
+  elseif level == ngx.WARN then
+    kong_log.warn(msg)
+  else
+    kong_log.info(msg)
+  end
+end
+
+-- Initialize with proper log levels
+oidc.set_logging(kong_oidc_logger, {
+  DEBUG = ngx.DEBUG,
+  ERROR = ngx.ERR,
+  WARN = ngx.WARN
+})
 
 local plugin = {
   VERSION = "1.3.0",
@@ -33,7 +53,7 @@ local function make_oidc(conf)
 
   if err then
     if err == "unauthorized request" then
-      return kong.response.exit(401, { message = "Unauthorized" })
+      return kong.response.exit(401, { message = "Unauthorized with errors inside the oidc authenticate" })
     elseif conf.recovery_page_path then
       kong.log.debug("Redirecting to recovery page: ", conf.recovery_page_path)
       return kong.response.exit(302, "", { ["Location"] = conf.recovery_page_path })
