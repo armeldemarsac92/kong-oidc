@@ -53,6 +53,7 @@ local function make_oidc(conf)
   kong.log.debug("Unauth action si currently set to: ", unauth_action)
 
   local res, err = oidc.authenticate(conf, kong.request.get_path(), unauth_action)
+  kong.log.debug("OIDC authenticate returned: res=", res, ", err=", err)
 
   if err then
     if err == "unauthorized request" then
@@ -154,6 +155,10 @@ local function introspect(conf)
 end
 
 function plugin.access(conf)
+  kong.log.debug("Full plugin configuration (conf) received:")
+  for k, v in pairs(conf) do
+    kong.log.debug(string.format("  %s: %s", k, tostring(v)))
+  end
   local oidcConfig = utils.get_options(conf, ngx)
 
   if oidcConfig.skip_already_auth_requests and kong.client.get_credential() then
