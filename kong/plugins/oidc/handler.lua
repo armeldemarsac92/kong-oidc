@@ -5,7 +5,6 @@ local jwt_validators = require("resty.jwt-validators")
 local utils = require("kong.plugins.oidc.utils")
 local filter = require("kong.plugins.oidc.filter")
 local session = require("kong.plugins.oidc.session")
-local cjson = require("cjson")
 
 
 local plugin = {
@@ -155,7 +154,7 @@ local function introspect(conf)
 end
 
 function plugin.access(conf)
-  kong.log.debug("Conf currently loaded: ", cjson.encode(conf))
+    kong.log.debug("Conf currently loaded:\n" .. utils.dump_table(conf))
   local oidcConfig = utils.get_options(conf, ngx)
 
   if oidcConfig.skip_already_auth_requests and kong.client.get_credential() then

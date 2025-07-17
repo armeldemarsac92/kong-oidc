@@ -227,4 +227,19 @@ function M.has_common_item(t1, t2)
   return false
 end
 
+function dump_table(tbl, indent)
+  indent = indent or 0
+  local result = {}
+  for k, v in pairs(tbl) do
+    local formatting = string.rep("  ", indent) .. tostring(k) .. ": "
+    if type(v) == "table" then
+      table.insert(result, formatting)
+      table.insert(result, dump_table(v, indent + 1))
+    else
+      table.insert(result, formatting .. tostring(v))
+    end
+  end
+  return table.concat(result, "\n")
+end
+
 return M
