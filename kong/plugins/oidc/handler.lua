@@ -48,6 +48,9 @@ local function make_oidc(conf)
   kong.log.debug("Authenticating request via OIDC for path: ", kong.request.get_path())
 
   local unauth_action = conf.unauth_action == "auth" and "auth" or "deny"
+  
+  kong.log.debug("Unauth action si currently set to: ", unauth_action)
+
   local res, err = oidc.authenticate(conf, kong.request.get_path(), unauth_action)
 
   if err then
