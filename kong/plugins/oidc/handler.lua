@@ -6,32 +6,31 @@ local utils = require("kong.plugins.oidc.utils")
 local filter = require("kong.plugins.oidc.filter")
 local session = require("kong.plugins.oidc.session")
 
-local kong_log = kong.log
 
-local function kong_oidc_logger(level, ...)
-  local msg = table.concat({...}, " ")
-  if level == ngx.DEBUG then
-    kong_log.debug(msg)
-  elseif level == ngx.ERR then
-    kong_log.err(msg)
-  elseif level == ngx.WARN then
-    kong_log.warn(msg)
-  else
-    kong_log.info(msg)
-  end
-end
-
--- Initialize with proper log levels
-oidc.set_logging(kong_oidc_logger, {
-  DEBUG = ngx.DEBUG,
-  ERROR = ngx.ERR,
-  WARN = ngx.WARN
-})
 
 local plugin = {
   VERSION = "1.3.0",
   PRIORITY = 1000,
 }
+
+local function custom_logger(level, message)
+    if level == ngx.DEBUG then
+        kong.log.debug(message)
+    elseif level == ngx.ERR then
+        kong.log.err(message)   
+    elseif level == ngx.WARN then
+        kong.log.warn(message)
+    else
+        kong.log.debug(message)  
+    end
+end
+
+-- 2. Pass log levels as a TABLE (using OpenResty constants)
+oidc.set_logging(custom_logger, {
+    DEBUG = ngx.DEBUG,
+    ERROR = ngx.ERR,
+    WARN = ngx.WARN
+})
 
 -- Injecte les credentials, groupes et headers
 local function inject_all(entity, conf)
