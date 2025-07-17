@@ -155,11 +155,7 @@ local function introspect(conf)
 end
 
 function plugin.access(conf)
-  kong.log.debug("Full plugin configuration (conf) received:")
-  for k, v in pairs(conf) do
-    kong.log.debug(string.format("  %s: %s", k, tostring(v)))
-  end
-  local oidcConfig = utils.get_options(conf, ngx)
+  local oidcConfig = utils.get_options(conf.config, ngx)
 
   if oidcConfig.skip_already_auth_requests and kong.client.get_credential() then
     kong.log.debug("Skipping already authenticated request: ", kong.request.get_path())
