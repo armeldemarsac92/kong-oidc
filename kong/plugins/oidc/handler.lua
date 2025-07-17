@@ -46,6 +46,8 @@ end
 -- Appelle la bibliothèque OIDC pour effectuer l’authentification interactive
 local function make_oidc(conf)
   kong.log.debug("Authenticating request via OIDC for path: ", kong.request.get_path())
+  
+  kong.log.debug("Unauth action from conf is equal to: ", conf.unauth_action)
 
   local unauth_action = conf.unauth_action == "auth" and "auth" or "deny"
   
