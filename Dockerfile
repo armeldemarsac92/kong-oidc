@@ -4,11 +4,14 @@ USER root
 RUN apt-get update && apt-get install -y --no-install-recommends luarocks \
     && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /plugin_build_area
+WORKDIR /app
+COPY . /app
 
 RUN luarocks install lua-resty-openidc
 
-COPY ./kong/plugins/oidc/ ./kong/plugins/oidc/
+WORKDIR /plugin_build_area
+
+COPY --from=builder /app/kong/plugins/oidc/ /plugin_build_area/kong/plugins/oidc/
 
 COPY --from=builder /usr/local/share/lua/5.1/ /plugin_build_area/lua/5.1/
 
