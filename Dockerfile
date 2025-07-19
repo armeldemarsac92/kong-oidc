@@ -1,4 +1,4 @@
-﻿FROM kong/kong:3.9.1-ubuntu
+﻿FROM kong/kong-gateway:3.11
 
 USER root
 
