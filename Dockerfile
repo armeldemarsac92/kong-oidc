@@ -10,7 +10,6 @@ RUN luarocks install lua-resty-openidc
 RUN git clone https://github.com/armeldemarsac92/kong-plugin-jwt-keycloak.git
 
 FROM scratch
-RUN mkdir -p /kong/plugins/oidc /kong/plugins/jwt-keycloak
 
 COPY --from=builder /tmp/kong-oidc/kong/plugins/oidc/ /kong/plugins/oidc/
 COPY --from=builder /usr/local/share/lua/5.1/lua-resty-openidc/ /usr/local/share/lua/5.1/lua-resty-openidc/
