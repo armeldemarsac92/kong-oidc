@@ -13,13 +13,20 @@ RUN luarocks install lua-resty-openidc
 # Stage 2: Prepare plugin bundle
 FROM kong/kong-gateway:3.11-ubuntu AS packager
 
-# Copy from builder stage
-COPY --from=builder /app/kong/plugins/oidc/ /plugin_build_area/kong/plugins/oidc/
-COPY --from=builder /usr/local/share/lua/5.1/ /plugin_build_area/lua/5.1/
+USER root  # Switch to root for file operations
 
-# Create tarball
-RUN tar -czf /plugin.tar.gz -C /plugin_build_area .
+# Create directory with proper permissions
+RUN mkdir -p /plugin_build_area && chown -R kong:kong /plugin_build_area
+
+USER kong  # Switch back to kong user
+
+# Copy from builder stage
+COPY --from=builder --chown=kong:kong /app/kong/plugins/oidc/ /plugin_build_area/kong/plugins/oidc/
+COPY --from=builder --chown=kong:kong /usr/local/share/lua/5.1/ /plugin_build_area/lua/5.1/
+
+# Create tarball in writable directory
+RUN mkdir /output && tar -czf /output/plugin.tar.gz -C /plugin_build_area .
 
 # Stage 3: Final output
 FROM scratch
-COPY --from=packager /plugin.tar.gz /
+COPY --from=packager /output/plugin.tar.gz /
