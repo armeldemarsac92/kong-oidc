@@ -1,33 +1,13 @@
-﻿# Stage 1: Build dependencies and plugin
-FROM kong/kong-gateway:3.11-ubuntu AS builder
-
-# Use default kong user (UID 1000) instead of root
-USER kong
-WORKDIR /app
-COPY --chown=kong:kong . /app
-
-# Install dependencies using kong user
-RUN sudo apt-get update && \
-    sudo apt-get install -y --no-install-recommends luarocks && \
-    sudo rm -rf /var/lib/apt/lists/*
-
-# Install plugin dependencies
-RUN luarocks install lua-resty-openidc
-
-# Stage 2: Prepare plugin bundle
-FROM kong/kong-gateway:3.11-ubuntu AS packager
-
-# Use kong user
-USER kong
-WORKDIR /home/kong
-
-# Copy from builder stage to a writable location
-COPY --from=builder --chown=kong:kong /app/kong/plugins/oidc/ ./plugin_build_area/kong/plugins/oidc/
-COPY --from=builder --chown=kong:kong /usr/local/share/lua/5.1/ ./plugin_build_area/lua/5.1/
-
-# Create tarball in home directory
-RUN tar -czf plugin.tar.gz -C plugin_build_area .
-
-# Stage 3: Final output
+﻿# Start from the absolute minimal base image
 FROM scratch
-COPY --from=packager /home/kong/plugin.tar.gz /
+
+# Copy your OIDC plugin's files directly into the image.
+# This assumes the Dockerfile is at the root of your 'kong-oidc' repository
+# and the plugin's main directory structure is 'kong/plugins/oidc/'.
+# The destination '/' means it will be copied to the root of the scratch image,
+# maintaining its relative path (e.g., /kong/plugins/oidc/).
+COPY ./kong/plugins/oidc/ /
+
+# The ENTRYPOINT is not strictly necessary for KongPluginInstallation images,
+# as the operator extracts the tarball.
+# ENTRYPOINT ["/bin/true"]
