@@ -1,6 +1,4 @@
--- kong/plugins/otter-auth/handler.lua
-
-local oidc = require("resty.openidc")
+    local oidc = require("resty.openidc")
 local jwt_validators = require("resty.jwt-validators")
 local utils = require("kong.plugins.oidc.utils")
 local filter = require("kong.plugins.oidc.filter")
@@ -154,7 +152,7 @@ local function introspect(conf)
   return res
 end
 
-function plugin.access(conf)
+function plugin:access(conf)
   kong.log.inspect(conf, "Full conf object in plugin.access")
   local oidcConfig = utils.get_options(conf, ngx)
 
