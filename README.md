@@ -1,3 +1,6 @@
+# Latest update
+This repo was archived and sadly not compatible with the latest Kong versions so I forked it and brought it up to standards. Read the [tutorial](https://medium.com/@armeldemarsac/secure-your-kubernetes-cluster-with-kong-and-keycloak-e8aa90f4f4bd) for reference.
+
 # What is Kong OIDC plugin
 
 [![Join the chat at https://gitter.im/nokia/kong-oidc](https://badges.gitter.im/nokia/kong-oidc.svg)](https://gitter.im/nokia/kong-oidc?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
